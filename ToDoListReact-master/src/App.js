@@ -4,6 +4,7 @@ import service from './service.js';
 function App() {
   const [newTodo, setNewTodo] = useState("");
   const [todos, setTodos] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false); // מצב למודול
 
   async function getTodos() {
     const todos = await service.getTasks();
@@ -13,18 +14,19 @@ function App() {
   async function createTodo(e) {
     e.preventDefault();
     await service.addTask(newTodo);
-    setNewTodo("");//clear input
-    await getTodos();//refresh tasks list (in order to see the new one)
+    setNewTodo(""); // לנקות את השדה
+    setIsModalOpen(false); // לסגור את המודול
+    await getTodos(); // לרענן את רשימת המשימות
   }
 
   async function updateCompleted(todo, isComplete) {
-    await service.setCompleted(todo.id, isComplete);
-    await getTodos();//refresh tasks list (in order to see the updated one)
+    await service.setCompleted(todo, isComplete);
+    await getTodos(); // לרענן את רשימת המשימות
   }
 
   async function deleteTodo(id) {
     await service.deleteTask(id);
-    await getTodos();//refresh tasks list
+    await getTodos(); // לרענן את רשימת המשימות
   }
 
   useEffect(() => {
@@ -35,9 +37,21 @@ function App() {
     <section className="todoapp">
       <header className="header">
         <h1>todos</h1>
-        <form onSubmit={createTodo}>
-          <input className="new-todo" placeholder="Well, let's take on the day" value={newTodo} onChange={(e) => setNewTodo(e.target.value)} />
-        </form>
+        <button onClick={() => setIsModalOpen(true)}>הוסף משימה</button> {/* כפתור הוספה */}
+        {isModalOpen && (
+          <div className="modal">
+            <form onSubmit={createTodo}>
+              <input 
+                className="new-todo" 
+                placeholder="הכנס את שם המשימה" 
+                value={newTodo} 
+                onChange={(e) => setNewTodo(e.target.value)} 
+              />
+              <button type="submit">שמור</button>
+              <button type="button" onClick={() => setIsModalOpen(false)}>סגור</button>
+            </form>
+          </div>
+        )}
       </header>
       <section className="main" style={{ display: "block" }}>
         <ul className="todo-list">
@@ -54,7 +68,7 @@ function App() {
           })}
         </ul>
       </section>
-    </section >
+    </section>
   );
 }
 

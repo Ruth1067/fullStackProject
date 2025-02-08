@@ -106,6 +106,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+
+    app.UseSwagger();
+    app.UseSwaggerUI();
+
+
 app.UseCors("AllowAllOrigins");
 
 // הגדרת ה-routes
@@ -145,6 +150,7 @@ app.MapDelete("/tasks/{id}", async (int id, ToDoDbContext db) =>
     return Results.NoContent(); // אם מחקנו בהצלחה
 });
 
+app.MapGet("/", () => "service is running");
 // הפעלת האפליקציה
 app.Run();
 

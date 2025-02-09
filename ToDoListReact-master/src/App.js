@@ -7,9 +7,21 @@ function App() {
   const [isModalOpen, setIsModalOpen] = useState(false); // מצב למודול
 
   async function getTodos() {
-    const todos = await service.getTasks();
-    setTodos(todos);
+    try {
+      const todos = await service.getTasks();
+      console.log("Retrieved todos:", todos);
+      if (Array.isArray(todos)) {
+        setTodos(todos);
+      } else {
+        console.error("Expected todos to be an array, but got:", todos);
+        setTodos([]);
+      }
+    } catch (error) {
+      console.error("Error fetching todos:", error);
+      setTodos([]);
+    }
   }
+  
 
   async function createTodo(e) {
     e.preventDefault();
@@ -55,7 +67,7 @@ function App() {
       </header>
       <section className="main" style={{ display: "block" }}>
         <ul className="todo-list">
-          {todos.map(todo => {
+          {todos?.map(todo => {
             return (
               <li className={todo.isComplete ? "completed" : ""} key={todo.id}>
                 <div className="view">

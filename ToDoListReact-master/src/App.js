@@ -26,19 +26,19 @@ function App() {
   async function createTodo(e) {
     e.preventDefault();
     await service.addTask(newTodo);
-    setNewTodo(""); // לנקות את השדה
-    setIsModalOpen(false); // לסגור את המודול
-    await getTodos(); // לרענן את רשימת המשימות
+    setNewTodo("");
+    setIsModalOpen(false);
+    await getTodos();
   }
 
   async function updateCompleted(todo, isComplete) {
     await service.setCompleted(todo, isComplete);
-    await getTodos(); // לרענן את רשימת המשימות
+    await getTodos();
   }
 
   async function deleteTodo(id) {
     await service.deleteTask(id);
-    await getTodos(); // לרענן את רשימת המשימות
+    await getTodos();
   }
 
   useEffect(() => {
